@@ -376,7 +376,7 @@ export class WidgetUserServiceLib {
     const result: any = this.http.get(API_END_POINTS.FETCH_DESIGNATION_COURSES).pipe(catchError(this.handleError), map(
       async (data: any) => {
         if(data.result && data.result.courseList) {
-          return data.result && data.result.courseList
+          return data.result.courseList
         }
         return ''
       })
