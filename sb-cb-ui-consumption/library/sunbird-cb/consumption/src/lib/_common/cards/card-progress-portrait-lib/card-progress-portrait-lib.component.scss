@@ -15,7 +15,7 @@ $secondary-color: #EF951E;
       background-size: 100%;
       width: 147px;
       height: 100px;
-  
+
     }
     .portrait-subheading {
       opacity: 1;
@@ -61,7 +61,7 @@ $secondary-color: #EF951E;
     .portrait_widget {
       align-items: center;
       margin-top: 0;
-  
+
       .course_port {
         border: 1px solid $secondary-color;
       padding: 4px 8px;
@@ -131,7 +131,7 @@ $secondary-color: #EF951E;
           border: none;
           width: 100%;
           cursor: pointer;
-  
+
           .textwrap {
             white-space: nowrap;
             overflow: hidden;
@@ -139,7 +139,7 @@ $secondary-color: #EF951E;
             max-width: 82px;
           }
         }
-  
+
         .resume-btn:hover {
           background-color: #253379;
         }
@@ -148,7 +148,7 @@ $secondary-color: #EF951E;
           background-color: #d13924 !important;
         }
       }
-  
+
     }
     .progress-bar-new {
       color: rgb(239, 149, 30) !important;
@@ -276,7 +276,7 @@ $secondary-color: #EF951E;
   line-height: 16px;
   white-space: nowrap;
   max-width: 100px;
-  
+
   .level-text {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -310,6 +310,45 @@ $secondary-color: #EF951E;
   flex-shrink: 0;
 }
 .difficulty-main {
-  gap: 5px; 
+  gap: 5px;
   // flex-wrap: wr
+}
+
+.cert-btn {
+  z-index: 12;
+  position: relative;
+}
+
+.retired-course-card {
+  position: relative;
+  .retired-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 10;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    border-radius: inherit;
+    padding: 12px;
+    overflow: hidden;
+  }
+  .retired-badge {
+    background: rgba(209, 57, 36, 1);
+    color: white;
+    padding: 2px 20px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transform: rotate(325deg);
+    position: relative;
+    top: 11px;
+    left: -36px;
+    overflow: hidden;
+    font-family: "Lato-Regular";
+  }
 }

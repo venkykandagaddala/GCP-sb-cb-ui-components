@@ -1,22 +1,30 @@
 <ng-container *ngIf="!isCardLoading">
-  <mat-card class="card-portrait card-progress-portrait-lib cursor-pointer mt-4"
-    [ngClass]="widgetData?.cardCustomeClass ? widgetData?.cardCustomeClass : ''"
-    (click)="raiseTelemetry();getRedirectUrlData(widgetData?.content); $event.stopPropagation()">
-    <div class="course_widget portrait_widget flex  margin-bottom-xs" [style.gap]="widgetData?.content.difficultyLevel ? '5px' : '0px'"
+  <mat-card class="card-portrait card-progress-portrait-lib cursor-pointer mt-4 position-relative"
+    [ngClass]="[widgetData?.cardCustomeClass ? widgetData?.cardCustomeClass : '', widgetData?.retired ? 'retired-course-card' : '']"
+    (click)="widgetData?.retired ? $event.stopPropagation() : raiseTelemetry();getRedirectUrlData(widgetData?.content); $event.stopPropagation()">
+    <!-- Retired Overlay -->
+    <div *ngIf="widgetData?.retired" class="retired-overlay">
+      <div class="retired-badge">Course Retired</div>
+    </div>
+    <div class="course_widget portrait_widget flex  margin-bottom-xs"
+      [style.gap]="widgetData?.content.difficultyLevel ? '5px' : '0px'"
       [ngClass]="{'retiredCards': widgetData?.content?.status === 'Retired' && widgetData?.content?.completionPercentage === 100,'margin-bottom-xl':!widgetData?.content?.primaryCategory}">
       <!-- Apply difficulty-main class conditionally if widgetData?.content?.difficultyLevel is true-->
-      <div class="flex flex-end flex-middle course_port" *ngIf="widgetData?.content?.primaryCategory" >
+      <div class="flex flex-end flex-middle course_port" *ngIf="widgetData?.content?.primaryCategory">
         <mat-icon class="mat-icon main_icon  ws-mat-default-text margin-right-xs">video_library</mat-icon>
         <ng-container *ngIf="widgetData?.content?.courseCategory === 'Case Study'">
-          <sb-uic-display-content-type i18n-title [title]="widgetData.content?.courseCategory || widgetData.content?.primaryCategory"
+          <sb-uic-display-content-type i18n-title
+            [title]="widgetData.content?.courseCategory || widgetData.content?.primaryCategory"
             class="ws-mat-black60-text font-normal mat-caption"
             [displayContentType]="widgetData?.content?.courseCategory">
           </sb-uic-display-content-type>
         </ng-container>
         <ng-container *ngIf="widgetData?.content?.courseCategory !== 'Case Study'">
-          <sb-uic-display-content-type i18n-title [title]="widgetData.content?.courseCategory || widgetData.content?.primaryCategory"
-          [style.max-width]="widgetData?.content?.difficultyLevel?.toLowerCase() === 'intermediate' ? '90px' : (widgetData?.content?.difficultyLevel ? '85px' : 'auto')"
-            class="ws-mat-black60-text font-normal mat-caption" [displayContentType]="widgetData?.content?.primaryCategory==='Course Unit'
+          <sb-uic-display-content-type i18n-title
+            [title]="widgetData.content?.courseCategory || widgetData.content?.primaryCategory"
+            [style.max-width]="widgetData?.content?.difficultyLevel?.toLowerCase() === 'intermediate' ? '90px' : (widgetData?.content?.difficultyLevel ? '85px' : 'auto')"
+            class="ws-mat-black60-text font-normal mat-caption"
+            [displayContentType]="widgetData?.content?.primaryCategory==='Course Unit'
             ?'Module'
             :widgetData?.content?.courseCategory ? widgetData?.content?.courseCategory :widgetData?.content?.primaryCategory">
           </sb-uic-display-content-type>
@@ -24,42 +32,55 @@
       </div>
       <!-- continue learning show all content -->
       <!-- <div *ngIf="true" class="knowledge-level-container"> -->
-            <div *ngIf="widgetData?.content?.difficultyLevel" class="knowledge-level-container">
-              <span *ngIf="widgetData?.content?.difficultyLevel?.toLowerCase() === 'beginner'" class="level-badge beginner">
-                <!-- <span *ngIf="false" class="level-badge beginner" title="Beginner"> -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
-                  <rect width="16" height="16" fill="#DBF4DC"/>
-                  <path d="M7.42267 5C7.67927 4.55555 8.32077 4.55556 8.57737 5L12.0415 11C12.2981 11.4444 11.9773 12 11.4641 12H4.53592C4.02272 12 3.70197 11.4444 3.95857 11L7.42267 5Z" fill="#49C951"/>
-                </svg>
-                <span class="level-text">{{widgetData?.content?.difficultyLevel}}</span>
-              </span>
-              <span *ngIf="widgetData?.content?.difficultyLevel?.toLowerCase() === 'intermediate'" class="level-badge intermediate">
-                <!-- <span *ngIf="true" class="level-badge intermediate" title="Intermediate"> -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
-                  <rect width="16" height="16" fill="#D1DBEC"/>
-                  <path d="M7.42267 2.66666C7.67927 2.22221 8.32077 2.22221 8.57737 2.66666L12.0415 8.66666C12.2981 9.1111 11.9773 9.66666 11.4641 9.66666H4.53592C4.02272 9.66666 3.70197 9.1111 3.95857 8.66666L7.42267 2.66666Z" fill="#1B4CA1"/>
-                  <path d="M7.42267 5.66666C7.67927 5.22221 8.32077 5.22221 8.57737 5.66666L12.0415 11.6667C12.2981 12.1111 11.9773 12.6667 11.4641 12.6667H4.53592C4.02272 12.6667 3.70197 12.1111 3.95857 11.6667L7.42267 5.66666Z" fill="#1B4CA1" stroke="#D1DBEC" stroke-width="0.5"/>
-                </svg>
-                <span class="level-text">{{widgetData?.content?.difficultyLevel}}</span>
-              </span>
-              <span *ngIf="widgetData?.content?.difficultyLevel?.toLowerCase() === 'advanced'" class="level-badge advanced">
-                <!-- <span *ngIf="false" class="level-badge advanced" title="Advanced"> -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
-                  <g clip-path="url(#clip0)">
-                    <rect width="16" height="16" fill="#FFE6E1"/>
-                    <path d="M7.42264 2.33334C7.67924 1.8889 8.32074 1.8889 8.57734 2.33334L12.0414 8.33334C12.298 8.77779 11.9773 9.33334 11.4641 9.33334H4.53589C4.02269 9.33334 3.70194 8.77779 3.95854 8.33334L7.42264 2.33334Z" fill="#FF8268"/>
-                    <path d="M7.42264 5C7.67924 4.55555 8.32074 4.55556 8.57734 5L12.0414 11C12.298 11.4444 11.9773 12 11.4641 12H4.53589C4.02269 12 3.70194 11.4444 3.95854 11L7.42264 5Z" fill="#FF8268" stroke="#FFE6E1" stroke-width="0.5"/>
-                    <path d="M7.42264 7.66669C7.67924 7.22224 8.32074 7.22224 8.57734 7.66669L12.0414 13.6667C12.298 14.1111 11.9773 14.6667 11.4641 14.6667H4.53589C4.02269 14.6667 3.70194 14.1111 3.95854 13.6667L7.42264 7.66669Z" fill="#FF8268" stroke="#FFE6E1" stroke-width="0.5"/>
-                  </g>
-                  <defs>
-                    <clipPath id="clip0">
-                      <rect width="16" height="16" fill="white"/>
-                    </clipPath>
-                  </defs>
-                </svg>
-                <span class="level-text">{{widgetData?.content?.difficultyLevel}}</span>
-              </span>
-            </div>
+      <div *ngIf="widgetData?.content?.difficultyLevel" class="knowledge-level-container">
+        <span *ngIf="widgetData?.content?.difficultyLevel?.toLowerCase() === 'beginner'" class="level-badge beginner">
+          <!-- <span *ngIf="false" class="level-badge beginner" title="Beginner"> -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+            <rect width="16" height="16" fill="#DBF4DC" />
+            <path
+              d="M7.42267 5C7.67927 4.55555 8.32077 4.55556 8.57737 5L12.0415 11C12.2981 11.4444 11.9773 12 11.4641 12H4.53592C4.02272 12 3.70197 11.4444 3.95857 11L7.42267 5Z"
+              fill="#49C951" />
+          </svg>
+          <span class="level-text">{{widgetData?.content?.difficultyLevel}}</span>
+        </span>
+        <span *ngIf="widgetData?.content?.difficultyLevel?.toLowerCase() === 'intermediate'"
+          class="level-badge intermediate">
+          <!-- <span *ngIf="true" class="level-badge intermediate" title="Intermediate"> -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+            <rect width="16" height="16" fill="#D1DBEC" />
+            <path
+              d="M7.42267 2.66666C7.67927 2.22221 8.32077 2.22221 8.57737 2.66666L12.0415 8.66666C12.2981 9.1111 11.9773 9.66666 11.4641 9.66666H4.53592C4.02272 9.66666 3.70197 9.1111 3.95857 8.66666L7.42267 2.66666Z"
+              fill="#1B4CA1" />
+            <path
+              d="M7.42267 5.66666C7.67927 5.22221 8.32077 5.22221 8.57737 5.66666L12.0415 11.6667C12.2981 12.1111 11.9773 12.6667 11.4641 12.6667H4.53592C4.02272 12.6667 3.70197 12.1111 3.95857 11.6667L7.42267 5.66666Z"
+              fill="#1B4CA1" stroke="#D1DBEC" stroke-width="0.5" />
+          </svg>
+          <span class="level-text">{{widgetData?.content?.difficultyLevel}}</span>
+        </span>
+        <span *ngIf="widgetData?.content?.difficultyLevel?.toLowerCase() === 'advanced'" class="level-badge advanced">
+          <!-- <span *ngIf="false" class="level-badge advanced" title="Advanced"> -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+            <g clip-path="url(#clip0)">
+              <rect width="16" height="16" fill="#FFE6E1" />
+              <path
+                d="M7.42264 2.33334C7.67924 1.8889 8.32074 1.8889 8.57734 2.33334L12.0414 8.33334C12.298 8.77779 11.9773 9.33334 11.4641 9.33334H4.53589C4.02269 9.33334 3.70194 8.77779 3.95854 8.33334L7.42264 2.33334Z"
+                fill="#FF8268" />
+              <path
+                d="M7.42264 5C7.67924 4.55555 8.32074 4.55556 8.57734 5L12.0414 11C12.298 11.4444 11.9773 12 11.4641 12H4.53589C4.02269 12 3.70194 11.4444 3.95854 11L7.42264 5Z"
+                fill="#FF8268" stroke="#FFE6E1" stroke-width="0.5" />
+              <path
+                d="M7.42264 7.66669C7.67924 7.22224 8.32074 7.22224 8.57734 7.66669L12.0414 13.6667C12.298 14.1111 11.9773 14.6667 11.4641 14.6667H4.53589C4.02269 14.6667 3.70194 14.1111 3.95854 13.6667L7.42264 7.66669Z"
+                fill="#FF8268" stroke="#FFE6E1" stroke-width="0.5" />
+            </g>
+            <defs>
+              <clipPath id="clip0">
+                <rect width="16" height="16" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+          <span class="level-text">{{widgetData?.content?.difficultyLevel}}</span>
+        </span>
+      </div>
     </div>
     <div class="flex"
       [ngClass]="{'retiredCards': widgetData?.content?.status === 'Retired' && widgetData?.content?.completionPercentage === 100}">
@@ -154,7 +175,7 @@
     </ng-container>
     <ng-container
       *ngIf="widgetData?.content?.completionPercentage === 100 && widgetData?.content?.courseCategory !== 'Case Study'">
-      <div class="flex flex-align-end progress-wrapper flex-end mt-1">
+      <div class="flex flex-align-end progress-wrapper flex-end mt-1 position-relative">
         <div class="progress-btn">
           <ng-container *ngIf="widgetData?.content?.surveyCompletionStatus === false; else viewCertificateBtn">
             <button class="resume-btn flex flex-middle flex-between view-btn takeSurveyBtn"
@@ -163,7 +184,7 @@
             </button>
           </ng-container>
           <ng-template #viewCertificateBtn>
-            <button class="resume-btn flex flex-middle flex-between view-btn"
+            <button class="resume-btn flex flex-middle flex-between cert-btn"
               [ngClass]="{'disable-btn': downloadCertificateLoading || widgetData?.content?.issuedCertificates?.length === 0}"
               (click)="!downloadCertificateLoading && downloadCertificate(widgetData?.content, $event);$event.stopPropagation()"
               [matTooltipPosition]="'below'"

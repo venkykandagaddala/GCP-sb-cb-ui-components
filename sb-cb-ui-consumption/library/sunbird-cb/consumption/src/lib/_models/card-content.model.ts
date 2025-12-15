@@ -14,6 +14,7 @@ export namespace NsCardContent {
     sakshamAIGenerated?: string
     publicCard?: any
     isiGOTSpecialization?: any
+    retired?: boolean
   }
 
   export interface IContentTags {

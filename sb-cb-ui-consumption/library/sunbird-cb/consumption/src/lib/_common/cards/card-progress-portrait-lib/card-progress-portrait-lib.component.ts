@@ -1,14 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { NsCardContent } from '../../../_models/card-content.model';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
-import { TranslateService } from '@ngx-translate/core';
-import { MultilingualTranslationsService } from '../../../_services/multilingual-translations.service';
-import { WidgetContentLibService } from '../../../_services/widget-content-lib.service';
-import { ConfigurationsService, EventService, WidgetContentService, WsEvents } from '@sunbird-cb/utils-v2';
-import * as _ from "lodash";
-import { CertificateService } from '../../../_services/certificate.service';
-import { CertificateDialogComponent } from '../../dialog-components/certificate-dialog/certificate-dialog.component';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { NsCardContent } from '../../../_models/card-content.model'
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar'
+import { TranslateService } from '@ngx-translate/core'
+import { MultilingualTranslationsService } from '../../../_services/multilingual-translations.service'
+import { WidgetContentLibService } from '../../../_services/widget-content-lib.service'
+import { ConfigurationsService, EventService, WidgetContentService, WsEvents } from '@sunbird-cb/utils-v2'
+import * as _ from "lodash"
+import { CertificateService } from '../../../_services/certificate.service'
+import { CertificateDialogComponent } from '../../dialog-components/certificate-dialog/certificate-dialog.component'
 
 const ALLOWED_CATEGORY_FOR_DYNAMIC_GENERATION = [
   // "Course",
@@ -23,29 +23,29 @@ const ALLOWED_CATEGORY_FOR_DYNAMIC_GENERATION = [
   "Comprehensive Assessment Program",
   "Pre Enrolment Assessment"
   // "External Redirect",
-];
+]
 @Component({
   selector: 'sb-uic-card-progress-portrait-lib',
   templateUrl: './card-progress-portrait-lib.component.html',
-  styleUrls: ['./card-progress-portrait-lib.component.scss']
+  styleUrls: ['./card-progress-portrait-lib.component.scss'],
 })
 export class CardProgressPortraitLibComponent implements OnInit {
 
-  @Input() widgetData!: NsCardContent.ICard;
+  @Input() widgetData!: NsCardContent.ICard
   @Input() isLiveOrMarkForDeletion: any
   @Input() showIntranetContent: any
   @Input() isIntranetAllowedSettings: any
   @Input() isCardLoading: boolean = false
   @Output() contentData = new EventEmitter<any>()
-  @Input()  cbPlanMapData: any
-  isCardFlipped:boolean = false
+  @Input() cbPlanMapData: any
+  isCardFlipped: boolean = false
   acbpConstants = NsCardContent.ACBPConst
   defaultThumbnail: any
   sourceLogos: any
   defaultSLogo: any
   showFlip = false
   widgetType: any = 'df'
-  widgetSubType: any ='sdf'
+  widgetSubType: any = 'sdf'
   downloadCertificateLoading: boolean = false
 
   constructor(
@@ -59,15 +59,15 @@ export class CardProgressPortraitLibComponent implements OnInit {
     private dialog: MatDialog,
     private contentSvcUtils: WidgetContentService,
 
-    ) { 
-      this.langtranslations.languageSelectedObservable.subscribe(() => {
-        if (localStorage.getItem('websiteLanguage')) {
-          this.translate.setDefaultLang('en')
-          const lang = localStorage.getItem('websiteLanguage')!
-          this.translate.use(lang)
-        }
-      })
-    }
+  ) {
+    this.langtranslations.languageSelectedObservable.subscribe(() => {
+      if (localStorage.getItem('websiteLanguage')) {
+        this.translate.setDefaultLang('en')
+        const lang = localStorage.getItem('websiteLanguage')!
+        this.translate.use(lang)
+      }
+    })
+  }
 
   ngOnInit() {
     const instanceConfig = this.configSvc.instanceConfig
@@ -77,8 +77,10 @@ export class CardProgressPortraitLibComponent implements OnInit {
       this.defaultSLogo = instanceConfig.logos.defaultSourceLogo || ''
     } else {
       this.defaultThumbnail = '/assets/instances/eagle/app_logos/default.png'
-      this.defaultSLogo =  '/assets/instances/eagle/app_logos/KarmayogiBharat_Logo.svg'
+      this.defaultSLogo = '/assets/instances/eagle/app_logos/KarmayogiBharat_Logo.svg'
     }
+
+    console.log('cbPlanMapData in card progress portrait', this.widgetData)
   }
 
   showSnackbar() {
@@ -88,14 +90,18 @@ export class CardProgressPortraitLibComponent implements OnInit {
       this.snackBar.open('Content may be expired or deleted', 'X', { duration: 2000 })
     }
   }
-  getRedirectUrlData(contentData: any){
-    // for telemetry
-    if (this.widgetData && this.widgetData.context && this.widgetData.context.pageSection) {
-      contentData['typeOfTelemetry'] = this.widgetData.context.pageSection
+  getRedirectUrlData(contentData: any) {
+
+    if (this.widgetData?.retired) {
+      // for telemetry
+      if (this.widgetData && this.widgetData.context && this.widgetData.context.pageSection) {
+        contentData['typeOfTelemetry'] = this.widgetData.context.pageSection
+      }
+      this.contSvc.changeTelemetryData(contentData)
+      // for redirection
+      this.contentData.emit(contentData)
     }
-    this.contSvc.changeTelemetryData(contentData)
-    // for redirection
-    this.contentData.emit(contentData)
+
   }
 
   translateLabels(label: string, type: any, subtype?: any) {
@@ -151,8 +157,8 @@ export class CardProgressPortraitLibComponent implements OnInit {
   //     if (
   //       this.widgetData.content &&
   //       this.widgetData.content.primaryCategory &&
-  //       allowedPrimaryCategory?.includes(this.widgetData.content?.primaryCategory?.toLowerCase()) || 
-  //       allowedPrimaryCategory?.includes(this.widgetData.content?.courseCategory?.toLowerCase()) 
+  //       allowedPrimaryCategory?.includes(this.widgetData.content?.primaryCategory?.toLowerCase()) ||
+  //       allowedPrimaryCategory?.includes(this.widgetData.content?.courseCategory?.toLowerCase())
   //     ) {
   //       const payload = {
   //         request: {
@@ -180,7 +186,7 @@ export class CardProgressPortraitLibComponent implements OnInit {
   //         }
   //       );
   //     } else {
- 
+
   //      this.certificateService
   //        .downloadCertificate_v2(certData.identifier)
   //        .subscribe((res: any) => {
@@ -199,7 +205,7 @@ export class CardProgressPortraitLibComponent implements OnInit {
   // }
 
   downloadCertificate(certificateData: any, event: any) {
-    event.stopPropagation();
+    event.stopPropagation()
     this.events.raiseInteractTelemetry(
       {
         type: WsEvents.EnumInteractTypes.CLICK,
@@ -210,15 +216,15 @@ export class CardProgressPortraitLibComponent implements OnInit {
         id: certificateData.issuedCertificates && certificateData.issuedCertificates.length && certificateData.issuedCertificates[0].identifier,   // id of the certificate
         type: WsEvents.EnumInteractSubTypes.CERTIFICATE,
       })
-    if(certificateData.issuedCertificates.length > 0) {
+    if (certificateData.issuedCertificates.length > 0) {
       this.downloadCertificateLoading = true
       const certificate: any = certificateData.issuedCertificates.sort((a: any, b: any) =>
         new Date(a.lastIssuedOn).getTime() - new Date(b.lastIssuedOn).getTime())
       let certData: any = certificate && certificate.length && certificate[0]
 
-      if (!certData.identifier) return 
-      
-      this.certificateService.downloadCertificate_v2(certData.identifier).subscribe((res: any)=>{
+      if (!certData.identifier) return
+
+      this.certificateService.downloadCertificate_v2(certData.identifier).subscribe((res: any) => {
         this.downloadCertificateLoading = false
         const cet = res.result.printUri
         this.dialog.open(CertificateDialogComponent, {
