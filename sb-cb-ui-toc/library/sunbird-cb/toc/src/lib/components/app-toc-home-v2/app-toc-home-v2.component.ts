@@ -972,7 +972,7 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
     if (enrolled === undefined || currentBatchSize === undefined || currentBatchSize === 0) {
       return false
     }
-    return !this.isBatchFull && !(enrolled > currentBatchSize * 0.8)
+    return !this.isBatchFull && (enrolled > currentBatchSize * 0.8)
   }
 
   get isMobile(): boolean {
