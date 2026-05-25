@@ -298,6 +298,8 @@ export class AppTocBannerComponent implements OnInit, OnChanges, OnDestroy {
         // this.getUsersToShare('')
       }
     }
+
+    this.setBatchControl()
   }
 
   getUsersToShare(queryStr: string) {
@@ -1016,6 +1018,12 @@ export class AppTocBannerComponent implements OnInit, OnChanges, OnDestroy {
       return isResource
     }
     return false
+  }
+
+  get isBatchFull(): boolean {
+    const enrolled = this.selectedBatchData?.userCount?.enrolled
+    const currentBatchSize = this.selectedBatchData?.content?.[0]?.batchAttributes?.currentBatchSize
+    return (enrolled !== undefined && currentBatchSize !== undefined && enrolled >= currentBatchSize)
   }
 
   getBatchUserCount(batchData: any) {

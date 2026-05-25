@@ -685,9 +685,28 @@
               (click)="navigateToNewVersion()" (keydown)="navigateToNewVersion()">
               <span class="btn-switch">{{ 'apptoc.switchToNewVersion' | translate }}</span>
             </div>
-
+            <ng-container *ngIf="contentReadData && contentReadData?.primaryCategory === primaryCategory.BLENDED_PROGRAM && batchData && !batchData?.enrolled && !batchData?.content?.length">
+              <div class="flex flex-col gap-4">
+                <div class="text-sm text-center">No batches available for this program.</div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="contentReadData && contentReadData?.primaryCategory === primaryCategory.BLENDED_PROGRAM && batchData && !batchData?.enrolled && batchData?.content?.length && batchData?.allBatchesExpired">
+              <div class="flex flex-col gap-4">
+                <div class="text-sm text-center text-black-700">Currently, there are no active batches available for enrollment.</div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="contentReadData && contentReadData?.primaryCategory === primaryCategory.BLENDED_PROGRAM && batchData && !batchData?.enrolled && isBatchFull">
+              <div class="flex flex-row justify-center items-center mt-2">
+                <div class="text-sm batch-green-text margin-remove-bottom">This batch is currently full and not accepting new enrollments.</div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="contentReadData && contentReadData?.primaryCategory === primaryCategory.BLENDED_PROGRAM && batchData && !batchData?.enrolled && showLimitedSeatsMsg">
+              <div class="flex flex-row justify-center items-center mt-2">
+                <div class="text-sm batch-orange-text margin-remove-bottom">Limited seats are available in ongoing batches. Please enroll in an available batch.</div>
+              </div>
+            </ng-container>
             <div class="flex flex-col gap-4"
-              *ngIf="contentReadData && contentReadData?.primaryCategory === primaryCategory.BLENDED_PROGRAM">
+              *ngIf="contentReadData && contentReadData?.primaryCategory === primaryCategory.BLENDED_PROGRAM && !(!batchData?.enrolled && (!batchData?.content?.length || batchData?.allBatchesExpired))">
               <div class="flex flex-row gap-3 justify-around" *ngIf="(preAssessmentCompletionStatus ||  !preAssessmentRequiredFlag)">
                 <div class="batch-info">
                   <div class="font-base font-bold">{{ selectedBatchData?.content[0]?.batchAttributes?.currentBatchSize

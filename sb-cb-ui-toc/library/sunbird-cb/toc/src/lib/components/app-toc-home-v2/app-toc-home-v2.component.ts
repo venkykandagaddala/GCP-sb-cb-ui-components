@@ -895,6 +895,13 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
         (data: NsContent.IBatchListResponse) => {
           this.batchData = data
           this.batchData.enrolled = false
+          if (this.contentReadData?.primaryCategory === this.primaryCategory.BLENDED_PROGRAM) {
+            if (this.batchData.content && this.batchData.content.length > 0) {
+              this.batchData.allBatchesExpired = this.batchData.content.every(
+                (batch: any) => !this.handleEnrollmentEndDate(batch)
+              )
+            }
+          }
           this.tocSvc.setBatchData(this.batchData)
           this.routerChangeHandler(false)
         },
@@ -953,6 +960,21 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
     return false
   }
 
+  get isBatchFull(): boolean {
+    const enrolled = this.selectedBatchData?.userCount?.enrolled
+    const currentBatchSize = this.selectedBatchData?.content?.[0]?.batchAttributes?.currentBatchSize
+    return (enrolled !== undefined && currentBatchSize !== undefined && enrolled >= currentBatchSize)
+  }
+
+  get showLimitedSeatsMsg(): boolean {
+    const enrolled = this.selectedBatchData?.userCount?.enrolled
+    const currentBatchSize = this.selectedBatchData?.content?.[0]?.batchAttributes?.currentBatchSize
+    if (enrolled === undefined || currentBatchSize === undefined || currentBatchSize === 0) {
+      return false
+    }
+    return !this.isBatchFull && !(enrolled > currentBatchSize * 0.8)
+  }
+
   get isMobile(): boolean {
     return this.utilitySvc.isMobile
   }
@@ -963,8 +985,9 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
 
   public handleEnrollmentEndDate(batch: any) {
     const enrollmentEndDate = dayjs(_.get(batch, 'enrollmentEndDate')).format('YYYY-MM-DD')
-    const systemDate = dayjs()
-    return enrollmentEndDate ? dayjs(enrollmentEndDate).isBefore(systemDate) : false
+    const systemDate = dayjs(this.serverDate).format('YYYY-MM-DD')
+    return (enrollmentEndDate && enrollmentEndDate !== 'Invalid Date') ?
+      (dayjs(enrollmentEndDate).isSame(systemDate, 'day') || dayjs(enrollmentEndDate).isAfter(systemDate)) : false
   }
 
   private openSnackbar(primaryMsg: string, duration: number = 5000) {

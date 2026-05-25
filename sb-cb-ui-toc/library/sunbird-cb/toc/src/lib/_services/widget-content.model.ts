@@ -187,6 +187,7 @@ export namespace NsContent {
     content?: IBatch[]
     count?: number,
     enrolled?: boolean,
+    allBatchesExpired?: boolean,
     workFlow?: {
       wfInitiated?: boolean
       batch?: any

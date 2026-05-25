@@ -308,6 +308,9 @@
               <div class="expired" *ngIf="!handleEnrollmentEndDate(batch) || disableEnrollBtn">
                 Expired
               </div>
+              <div class="expired ws-mat-green-text" *ngIf="batch.batchId === selectedBatch?.batchId && isBatchFull">
+                Full
+              </div>
             </div>
           </mat-option>
         </mat-select>
@@ -323,14 +326,15 @@
           </div>
           <div class="flex flex-row justify-center items-center">
             <button class="enroll-button"
-              [ngClass]="{ 'disable-btn': disableEnrollBtn || batchControl.hasError('required') || !handleEnrollmentEndDate(selectedBatch) }"
-              [disabled]="disableEnrollBtn || batchControl.hasError('required')|| !handleEnrollmentEndDate(selectedBatch)"
+              [ngClass]="{ 'disable-btn': disableEnrollBtn || batchControl.hasError('required') || !handleEnrollmentEndDate(selectedBatch) || isBatchFull }"
+              [disabled]="disableEnrollBtn || batchControl.hasError('required')|| !handleEnrollmentEndDate(selectedBatch) || isBatchFull"
               (click)="requestToEnrollDialog()">
               <ng-container>
                 Request to enroll
               </ng-container>
             </button>
           </div>
+
         </ng-container>
         <ng-container *ngIf="showRejected && content?.primaryCategory === primaryCategory.BLENDED_PROGRAM">
           <h3 class="margin-remove-bottom mat-body-2 ws-default-text">
