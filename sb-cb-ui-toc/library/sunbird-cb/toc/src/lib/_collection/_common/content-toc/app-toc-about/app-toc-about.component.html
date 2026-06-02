@@ -184,7 +184,17 @@
         <span class="btn-switch">{{ 'apptoc.switchToNewVersion' | translate }}</span>
     </div>
 </div>
-
+<!-- Batch status messages for mobile (BLENDED_PROGRAM) -->
+<ng-container *ngIf="isMobile && contentReadData?.primaryCategory === primaryCategory.BLENDED_PROGRAM && selectedBatchData && !selectedBatchData?.enrolled && isBatchFull">
+    <div class="flex flex-row justify-center items-center mx-4 mt-4">
+        <div class="text-sm batch-green-text margin-remove-bottom">This batch is currently full and not accepting new enrollments.</div>
+    </div>
+</ng-container>
+<ng-container *ngIf="isMobile && contentReadData?.primaryCategory === primaryCategory.BLENDED_PROGRAM && selectedBatchData && !selectedBatchData?.enrolled && showLimitedSeatsMsg">
+    <div class="flex flex-row justify-center items-center mx-4 mt-4">
+        <div class="text-sm batch-orange-text margin-remove-bottom">Limited seats are available in ongoing batches. Please enroll in an available batch.</div>
+    </div>
+</ng-container>
 
 <div class="flex flex-col my-4 px-4" [class.mt60]="sticky" [ngClass]="isMobile ? '' : 'gap-10'">
     <ng-container
@@ -264,7 +274,7 @@
         </div>
     </ng-container>
 
-    <ng-container *ngIf="content && content?.primaryCategory === primaryCategory.BLENDED_PROGRAM">
+    <ng-container *ngIf="content && content?.primaryCategory === primaryCategory.BLENDED_PROGRAM && selectedBatchData">
         <div class="flex flex-row gap-3 justify-around hideAbove1200">
             <div class="batch-info">
                 <div class="font-base font-bold">{{ selectedBatchData?.content[0]?.batchAttributes?.currentBatchSize ||

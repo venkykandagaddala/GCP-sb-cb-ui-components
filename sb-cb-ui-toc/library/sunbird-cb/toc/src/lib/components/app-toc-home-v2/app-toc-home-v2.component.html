@@ -617,12 +617,13 @@
         <!-- Overall progress functionality -->
         <ws-widget-content-toc [content]="content" [componentName]="'toc'" [pathSet]="pathSet"
           [tocStructure]="tocStructure" [forPreview]="forPreview" [isEnrolled]="batchData?.enrolled"
-          [resumeData]="resumeData" [batchData]="selectedBatchData" [skeletonLoader]="skeletonLoader"
+          [resumeData]="resumeData" [batchData]="batchData" [skeletonLoader]="skeletonLoader"
           [changeTab]="changeTab" [hierarchyMapData]="tocSvc?.hashmap" [selectedBatchData]="selectedBatchData"
           [condition]="{isPostAssessment: isPostAssessment, content: content, isAcbpCourse: isAcbpCourse, isClaimed: isClaimed, monthlyCapExceed: monthlyCapExceed, isCompletedThisMonth: isCompletedThisMonth, showTakeAssessment: showTakeAssessment, userEnrollmentList: userEnrollmentList, resumeData: resumeData, userRating: userRating, enrollBtnLoading: enrollBtnLoading, primaryCategory: primaryCategory, currentCourseBatchId: currentCourseBatchId, isAcbpClaim: isAcbpClaim}"
           [kparray]="kparray" (playResumeForAI)="playResumeForAI()" (enrollUserToAI)="enrollUserToAI()"
           [contentReadData]="contentReadData" [baseContentReadData]="baseContentReadData" [languageList]="languageList"
           [lockCertificate]="lockCertificate" (trigerCompletionSurveyForm)="openSurveyFormPopup($event)"
+          [isBatchFull]="isBatchFull" [showLimitedSeatsMsg]="showLimitedSeatsMsg"
           (resumeContent)="resumeContentData()"></ws-widget-content-toc>
         <div class="mob-tip-for-learner">
           <div *ngIf="learnAdvisoryData && learnAdvisoryData?.length">
@@ -977,9 +978,23 @@
 
     </div>
   </div>
-  <div class="mobile-enroll-div"
+  <div class="mobile-enroll-div orange-background">
+    <ng-container *ngIf="content && contentReadData?.primaryCategory === primaryCategory.BLENDED_PROGRAM 
+    && batchData && batchData?.allBatchesExpired">
+      <div class="flex flex-col gap-4 mx-4 mt-4">
+          <div class="text-sm text-center text-black-700">Currently, there are no active batches available for enrollment.</div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="content && contentReadData?.primaryCategory === primaryCategory.BLENDED_PROGRAM 
+    && batchData && batchData?.content?.length === 0">
+      <div class="flex flex-col gap-4 mx-4 mt-4">
+          <div class="text-sm text-center text-black-700">No batches available for this program.</div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="mobile-enroll-div" *ngIf="!batchData?.allBatchesExpired && batchData?.content?.length > 0 "
     [ngClass]="{'bg-white': contentReadData?.primaryCategory === primaryCategory.BLENDED_PROGRAM }">
-    <ng-container *ngIf="content && contentReadData?.primaryCategory === primaryCategory.BLENDED_PROGRAM ">
+    <ng-container *ngIf="content && contentReadData?.primaryCategory === primaryCategory.BLENDED_PROGRAM">
       <div class="mb-2" *ngIf="mobile1200 && !forPreview || isInIFrame; else authViewBtn">
         <ws-app-toc-banner role="banner" [banners]="banners" [forPreview]="forPreview" [content]="content"
           [userEnrollmentList]="userEnrollmentList" (withdrawOrEnroll)="withdrawOrEnroll($event)"

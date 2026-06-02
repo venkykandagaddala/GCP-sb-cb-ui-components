@@ -93,6 +93,8 @@ export class AppTocAboutComponent implements OnInit, OnChanges, AfterViewInit, O
   @Input() languageList = []
   @Input() lockCertificate = false
   @Input() fromMDO = false
+  @Input() isBatchFull = false
+  @Input() showLimitedSeatsMsg = false
   @Output() trigerCompletionSurveyForm = new EventEmitter<boolean>()
   @ViewChild('summaryElem') summaryElem !: ElementRef
   @ViewChild('objectivesElem') objectivesElem !: ElementRef
@@ -213,7 +215,22 @@ export class AppTocAboutComponent implements OnInit, OnChanges, AfterViewInit, O
       this.isMobile = false
     }
 
-    
+    console.log('batchData', this.batchData)
+
+    this.tocSvc.getSelectedBatch
+      .pipe(takeUntil(this.destroySubject$))
+      .subscribe((selectedBatch: any) => {
+        this.batchData = selectedBatch
+        const enrolled = selectedBatch?.userCount?.enrolled
+        const currentBatchSize = selectedBatch?.content?.[0]?.batchAttributes?.currentBatchSize
+        if (enrolled !== undefined && currentBatchSize !== undefined) {
+          this.isBatchFull = enrolled >= currentBatchSize
+          this.showLimitedSeatsMsg = !this.isBatchFull && currentBatchSize > 0 && (enrolled > currentBatchSize * 0.8)
+        } else {
+          this.isBatchFull = false
+          this.showLimitedSeatsMsg = false
+        }
+      })
 
     if (this.content && this.content.identifier) {
       this.fetchRatingSummary()

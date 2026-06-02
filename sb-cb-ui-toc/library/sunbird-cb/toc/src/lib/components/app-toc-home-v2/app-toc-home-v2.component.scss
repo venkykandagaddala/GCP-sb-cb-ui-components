@@ -484,12 +484,17 @@ a.action-button {
   }
 }
 
+.orange-background {
+  background: #F3962F;
+}
+
 .mobile-enroll-div {
   padding: 16px;
   position: fixed;
   z-index: 1000;
   bottom: 0px;
   width: calc(100% - 32px);
+
 
   .action-button,
   .preenrolldone-btn {
